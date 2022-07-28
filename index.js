@@ -4,7 +4,7 @@ const app = express()
 
 app.use(express.static('dist'))
 app.use(express.json())
-app.use(cors({origin: "http://localhost:5174"}))
+app.use(cors({origin: "http://localhost:3001"}))
 
 let notes = [
     {
@@ -80,7 +80,7 @@ app.post('/api/notes', (request, response) => {
   response.json(note)
 })
   
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
