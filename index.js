@@ -18,8 +18,10 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
+  Note.find({})
+  .then(notes => {
     response.json(notes)
+    console.log(notes)
   })
 })
 
