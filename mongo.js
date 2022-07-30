@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const password = encodeURIComponent("Ethereum6767!")
-
 
 if (process.argv.length < 3) {
     console.log('Please provide the password as an argument: node mongo.js <password>')
@@ -9,21 +7,21 @@ if (process.argv.length < 3) {
 
 // const url = `mongodb+srv://fullstack:${password}@cluster1.8edxktv.mongodb.net/?retryWrites=true&w=majority`
 
-const noteSchema = new mongoose.Schema({
-    content: String,
-    date: Date,
-    important: Boolean
-})
+// const noteSchema = new mongoose.Schema({
+//     content: String,
+//     date: Date,
+//     important: Boolean
+// })
 
-noteSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-      returnedObject.id = returnedObject._id.toString()
-      delete returnedObject._id
-      delete returnedObject.__v
-    }
-  })
+// noteSchema.set('toJSON', {
+//     transform: (document, returnedObject) => {
+//       returnedObject.id = returnedObject._id.toString()
+//       delete returnedObject._id
+//       delete returnedObject.__v
+//     }
+//   })
 
-const Note = mongoose.model('Note', noteSchema)
+// const Note = mongoose.model('Note', noteSchema)
 
 mongoose
     .connect(url)
