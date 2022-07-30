@@ -17,9 +17,8 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(cors())
 
-
-
 app.get('/api/notes', (request, response) => {
+  console.log(Note)
   Note.find({}).then(notes => {
     response.json(notes)
   })
