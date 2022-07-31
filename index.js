@@ -17,11 +17,13 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(cors())
 
+app.get('/', (request, response) => {
+  response('<h1>hello</h1>')
+})
+
 app.get('/api/notes', (request, response) => {
-  Note.find({})
-  .then(notes => {
+  Note.find({}).then(notes => {
     response.json(notes)
-    console.log(notes)
   })
 })
 
@@ -37,12 +39,6 @@ app.delete('/api/notes/:id', (request, response) => {
 
   response. status(204).end()
 })
-
-// const generateId = () => {
-//   const maxId = notes.length > 0 ? Math.max(...notes.map(n => notes.id)) : 0
-//   return maxId + 1
-
-// }
 
 app.post('/api/notes', (request, response) => {
   const body = request.body
