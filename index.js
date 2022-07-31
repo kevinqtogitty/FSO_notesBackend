@@ -50,15 +50,15 @@ app.delete("/api/notes/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-//Add a new user to the database with the passed in content
+//Add a new note to the database with the passed in content
 app.post("/api/notes", (request, response, next) => {
   const body = request.body;
 
-  if (body.content === undefined) {
-    return response.status(404).json({
-      error: "content missing",
-    });
-  }
+  // if (body.content === undefined) {
+  //   return response.status(404).json({
+  //     error: "content missing",
+  //   });
+  // }
 
   const note = new Note({
     content: body.content,
