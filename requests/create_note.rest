@@ -1,7 +1,20 @@
+GET http://localhost:3001/api/notes/
+
+###
 POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
     "content": "YAAAAAAAA",
     "important": true
+}
+
+###
+PUT http://localhost:3001/api/notes/62e41c086bd7f0d537b6c2ac
+Content-Type: application/json
+
+{
+    "content": "HTML is Easy",
+    "important": true,
+    "id": "62e41c086bd7f0d537b6c2ac"
 }
