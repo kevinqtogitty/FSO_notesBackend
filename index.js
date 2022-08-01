@@ -1,122 +1,133 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const Note = require("./models/note");
-const app = express();
+const app = require("./app");
+const http = require("http");
+const config = require("./utils/config");
+const logger = require("./utils/logger");
 
-const requestLogger = (request, response, next) => {
-  console.log("Method:", request.method);
-  console.log("Path:  ", request.path);
-  console.log("Body:  ", request.body);
-  console.log("---");
-  next();
-};
+const server = http.createServer(app);
 
-app.use(requestLogger);
-app.use(express.static("dist"));
-app.use(express.json());
-app.use(cors());
+// require("dotenv").config();
+// const express = require("express");
+// const cors = require("cors");
+// const Note = require("./models/note");
+// const app = express();
 
-app.get("/", (request, response) => {
-  response("<h1>hello</h1>");
-});
+// const requestLogger = (request, response, next) => {
+//   console.log("Method:", request.method);
+//   console.log("Path:  ", request.path);
+//   console.log("Body:  ", request.body);
+//   console.log("---");
+//   next();
+// };
 
-//Get all the notes stored in the database onpageload
-app.get("/api/notes", (request, response) => {
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
-});
+// app.use(requestLogger);
+// app.use(express.static("dist"));
+// app.use(express.json());
+// app.use(cors());
 
-//Get a specific user by their id
-app.get("/api/notes/:id", (request, response, next) => {
-  Notes.findById(request.params.id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
-});
+// app.get("/", (request, response) => {
+//   response("<h1>hello</h1>");
+// });
 
-//Deltee a specific user by their id
-app.delete("/api/notes/:id", (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
-    .then((result) => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
-});
+// //Get all the notes stored in the database onpageload
+// app.get("/api/notes", (request, response) => {
+//   Note.find({}).then((notes) => {
+//     response.json(notes);
+//   });
+// });
 
-//Add a new note to the database with the passed in content
-app.post("/api/notes", (request, response, next) => {
-  const body = request.body;
+// //Get a specific user by their id
+// app.get("/api/notes/:id", (request, response, next) => {
+//   Notes.findById(request.params.id)
+//     .then((note) => {
+//       if (note) {
+//         response.json(note);
+//       } else {
+//         response.status(404).end();
+//       }
+//     })
+//     .catch((error) => next(error));
+// });
 
-  // if (body.content === undefined) {
-  //   return response.status(404).json({
-  //     error: "content missing",
-  //   });
-  // }
+// //Deltee a specific user by their id
+// app.delete("/api/notes/:id", (request, response, next) => {
+//   Note.findByIdAndRemove(request.params.id)
+//     .then((result) => {
+//       response.status(204).end();
+//     })
+//     .catch((error) => next(error));
+// });
 
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-  });
+// //Add a new note to the database with the passed in content
+// app.post("/api/notes", (request, response, next) => {
+//   const body = request.body;
 
-  note
-    .save()
-    .then((savedNote) => {
-      response.json(savedNote);
-    })
-    .catch((error) => next(error));
-});
+//   // if (body.content === undefined) {
+//   //   return response.status(404).json({
+//   //     error: "content missing",
+//   //   });
+//   // }
 
-//Edit the data of a speicific person give the id (toggle importance)
-app.put("/api/notes/:id", (request, response, next) => {
-  const { content, important } = request.body;
+//   const note = new Note({
+//     content: body.content,
+//     important: body.important || false,
+//     date: new Date(),
+//   });
 
-  // const note = {
-  //   content: body.content,
-  //   important: body.important,
-  // };
+//   note
+//     .save()
+//     .then((savedNote) => {
+//       response.json(savedNote);
+//     })
+//     .catch((error) => next(error));
+// });
 
-  Note.findByIdAndUpdate(
-    request.params.id,
-    { content, important },
-    { new: true, runValidators: true, context: "query" }
-  )
-    .then((updateNote) => {
-      response.json(updateNote);
-    })
-    .catch((error) => next(error));
-});
+// //Edit the data of a speicific person give the id (toggle importance)
+// app.put("/api/notes/:id", (request, response, next) => {
+//   const { content, important } = request.body;
 
-//When the user requests an non-existing route call this function to respond with a 404 eror
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
+//   // const note = {
+//   //   content: body.content,
+//   //   important: body.important,
+//   // };
 
-app.use(unknownEndpoint);
+//   Note.findByIdAndUpdate(
+//     request.params.id,
+//     { content, important },
+//     { new: true, runValidators: true, context: "query" }
+//   )
+//     .then((updateNote) => {
+//       response.json(updateNote);
+//     })
+//     .catch((error) => next(error));
+// });
 
-//When other shit goes wrong this errorHandler can be called with the next() method in any other route
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+// //When the user requests an non-existing route call this function to respond with a 404 eror
+// const unknownEndpoint = (request, response) => {
+//   response.status(404).send({ error: "unknown endpoint" });
+// };
 
-  if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
-  }
+// app.use(unknownEndpoint);
 
-  next(error);
-};
+// //When other shit goes wrong this errorHandler can be called with the next() method in any other route
+// const errorHandler = (error, request, response, next) => {
+//   console.error(error.message);
 
-app.use(errorHandler);
+//   if (error.name === "CastError") {
+//     return response.status(400).send({ error: "malformatted id" });
+//   } else if (error.name === "ValidationError") {
+//     return response.status(400).json({ error: error.message });
+//   }
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+//   next(error);
+// };
+
+// app.use(errorHandler);
+
+// const PORT = process.env.PORT || 3001;
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
+server.listen(config.PORT, () => {
+  logger.info(`Server running on ${config.PORT}`);
 });
