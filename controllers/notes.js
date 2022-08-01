@@ -65,7 +65,7 @@ notesRouter.delete("/:id", (request, response, next) => {
 });
 
 //Edit the data of a speicific person give the id (toggle importance)
-app.put("/api/notes/:id", (request, response, next) => {
+notesRouter.put("/api/notes/:id", (request, response, next) => {
   const { content, important } = request.body;
 
   const note = {
