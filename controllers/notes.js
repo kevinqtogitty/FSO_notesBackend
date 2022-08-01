@@ -1,7 +1,7 @@
 const notesRouter = require("express").Router;
 const express = require("express");
 const cors = require("cors");
-const Note = require("./models/note");
+const Note = require("../models/note");
 const app = express();
 
 const requestLogger = (request, response, next) => {
